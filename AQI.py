@@ -125,7 +125,7 @@ def main() -> None:
     print(f"Min: {minimum}")
     print(f"Max: {maximum}")
     print(f"Readings Below Average: {readings_below}")
-    print(f"Readings Above Average: {num_readings}")
+    print(f"Readings Above Average: {readings_above}")
     print(f"Description: {description}")    
     
 if __name__ == "__main__":
