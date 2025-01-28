@@ -99,6 +99,8 @@ def get_description(AQI: int) -> str:
         return "Unhealthy for sensitive groups"
     if AQI < 201:
         return "Unhealthy"
+    if AQI < 301:
+        return "Very unhealthy"
 
     return "Hazardous"
 
