@@ -116,7 +116,7 @@ def main() -> None:
         # it's OK for the purpose of this assignment
     maximum: int = get_max(readings)
     minimum: int = get_min(readings)
-    average: int = get_avg(readings)
+    average: int = int(get_avg(readings))
     readings_below: int = get_readings_below(readings, average)
     readings_above: int = get_readings_above(readings, average)
     description: str = get_description(average)
