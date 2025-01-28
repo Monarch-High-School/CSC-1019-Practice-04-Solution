@@ -1,0 +1,168 @@
+name: Autograding Tests
+'on': 
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Varied Scores 10
+      id: varied-scores-10
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Varied Scores 10
+        setup-command: ''
+        command: python3 AQI.py
+        input: |-
+          10
+          50
+          51
+          100
+          150
+          125
+          93
+          60
+          56
+          45
+          50
+        expected-output: |-
+          Readings: 10
+          Min: 45
+          Max: 150
+          Average: 78
+          Readings Below Average: 6
+          Readings Above Average: 4
+          Description: Moderate
+        comparison-method: contains
+        timeout: 1
+        max-score: 1
+    - name: Varied Scores 24
+      id: varied-scores-24
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Varied Scores 24
+        setup-command: ''
+        command: python3 AQI.py
+        input: |-
+            24
+            83
+            134
+            251
+            171
+            234
+            198
+            228
+            130
+            279
+            260
+            176
+            270
+            335
+            256
+            224
+            195
+            138
+            179
+            160
+            192
+            168
+            114
+            112
+            185
+        expected-output: |-
+            Readings: 24
+            Min: 83
+            Max: 335
+            Average: 195
+            Readings Below Average: 13
+            Readings Above Average: 10
+            Description: Unhealthy
+        comparison-method: contains
+        timeout: 1
+        max-score: 1   
+    - name: Two Scores
+      id: two-scores
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+          test-name: Two Scores
+          setup-command: ''
+          command: python3 AQI.py
+          input: |-
+              2
+              65
+              50
+          expected-output: |-
+              Readings: 2
+              Min: 50
+              Max: 65
+              Average: 58
+              Readings Below Average: 1
+              Readings Above Average: 1
+              Description: Moderate
+          comparison-method: contains
+          timeout: 1
+          max-score: 1   
+    - name: Same Scores
+      id: same-scores
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+          test-name: Two Scores
+          setup-command: ''
+          command: python3 AQI.py
+          input: |-
+            5
+            32
+            32
+            32
+            32
+            32
+          expected-output: |-
+            Readings: 5
+            Min: 32
+            Max: 32
+            Average: 32
+            Readings Below Average: 0
+            Readings Above Average: 0
+            Description: Good
+          comparison-method: contains
+          timeout: 1
+          max-score: 1           
+    - name: One Score
+      id: one-score
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: One Score
+        setup-command: ''
+        command: python3 AQI.py
+        input: |-
+            1
+            300
+        expected-output: |-
+            Readings: 1
+            Min: 300
+            Max: 300
+            Average: 300
+            Readings Below Average: 0
+            Readings Above Average: 0
+            Description: Very unhealthy
+        comparison-method: contains
+        timeout: 1
+        max-score: 1      
+
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        VARIED-SCORES-10_RESULTS: "${{steps.varied-scores-10.outputs.result}}"
+        VARIED-SCORES-24_RESULTS: "${{steps.varied-scores-24.outputs.result}}"
+        TWO-SCORES_RESULTS: "${{steps.two-scores.outputs.result}}"
+        SAME-SCORES_RESULTS: "${{steps.same-scores.outputs.result}}"
+        ONE-SCORE_RESULTS: "${{steps.one-score.outputs.result}}"
+      with:
+        runners: varied-scores-10, varied-scores-24, two-scores, same-scores,one-score
